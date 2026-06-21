@@ -96,3 +96,4 @@ async def generate_code(data: dict):
         "project_type": project_type,
         "generated_code": out["choices"][0]["message"]["content"]
     }
+    
