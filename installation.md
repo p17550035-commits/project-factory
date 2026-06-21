@@ -58,4 +58,4 @@ Open this in your browser:
 
 Installation steps may change as the project evolves.
 
-<!-- END OF INSTALLATION.md -->
+<!-- END OF INSTALLATION.md (61 lines) -->
