@@ -30,6 +30,8 @@
       height:100%;
     }
 
+    /* ---------------- HEADER ---------------- */
+
     #header {
       padding:6px 10px;
       background:#0b0b12;
@@ -38,11 +40,24 @@
       font-weight:600;
       flex-shrink:0;
       display:flex;
-      justify-content:space-between;
       align-items:center;
+      justify-content:center;
+      position:relative;
     }
 
-    #modeToggle {
+    .header-center {
+      flex:1;
+      text-align:center;
+    }
+
+    .header-right {
+      position:absolute;
+      right:10px;
+      display:flex;
+      gap:6px;
+    }
+
+    #modeToggle, #copyConversation {
       font-size:11px;
       padding:4px 8px;
       border-radius:999px;
@@ -51,6 +66,8 @@
       color:#e5e7eb;
       cursor:pointer;
     }
+
+    /* ---------------- CHAT AREA ---------------- */
 
     #chat {
       flex:1;
@@ -112,6 +129,8 @@
       font-size:10px;
     }
 
+    /* ---------------- INPUT BOX ---------------- */
+
     #inputBox {
       display:flex;
       padding:6px;
@@ -146,6 +165,8 @@
       font-weight:600;
       flex-shrink:0;
     }
+
+    /* ---------------- CODE BLOCKS ---------------- */
 
     pre {
       background:#020617;
@@ -194,6 +215,8 @@
       color:#9ca3af;
     }
 
+    /* ---------------- COMPACT MODE ---------------- */
+
     body.compact .bubble {
       padding:4px 6px;
       font-size:12px;
@@ -233,17 +256,26 @@
 <body>
 
 <div id="app">
+
+  <!-- HEADER -->
   <div id="header">
-    <span>Groq App Builder Chat</span>
-    <button id="modeToggle">Compact</button>
+    <div class="header-center">Groq App Builder Chat</div>
+
+    <div class="header-right">
+      <button id="copyConversation">Copy</button>
+      <button id="modeToggle">Compact</button>
+    </div>
   </div>
 
+  <!-- CHAT -->
   <div id="chat"></div>
 
+  <!-- INPUT -->
   <div id="inputBox">
     <input id="text" placeholder="Type here...">
     <button id="send">Send</button>
   </div>
+
 </div>
 
 <script>
@@ -251,6 +283,7 @@
   const text = document.getElementById("text");
   const send = document.getElementById("send");
   const modeToggle = document.getElementById("modeToggle");
+  const copyConversation = document.getElementById("copyConversation");
 
   function convertMarkdown(md) {
     return md.replace(/```([\s\S]*?)```/g, (match, code) => {
@@ -348,6 +381,16 @@
     modeToggle.textContent = document.body.classList.contains("compact")
       ? "Comfort"
       : "Compact";
+  };
+
+  copyConversation.onclick = () => {
+    const allText = [...document.querySelectorAll(".bubble")]
+      .map(b => b.innerText)
+      .join("\n\n");
+
+    navigator.clipboard.writeText(allText);
+    copyConversation.textContent = "Copied!";
+    setTimeout(() => copyConversation.textContent = "Copy", 1500);
   };
 </script>
 
