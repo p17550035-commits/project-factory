@@ -22,3 +22,6 @@ def build_project(req: BuildRequest):
         "project_type": req.project_type,
         "message": "Backend is wired up. Code generation logic comes next."
     }
+@app.get("/test")
+def test():
+    return {"message": "Backend is alive!"}
