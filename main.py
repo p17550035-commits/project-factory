@@ -64,3 +64,37 @@ def delete_project(project_id: str):
         "status": "deleted",
         "project_id": project_id
     }
+@app.post("/project/generate")
+async def generate_code(data: dict):
+    prompt = data.get("prompt", "")
+    project_type = data.get("project_type", "unknown")
+
+    if not GROQ_API_KEY or not GROQ_API_URL:
+        return {
+            "status": "error",
+            "message": "Missing GROQ_API_KEY or GROQ_API_URL"
+        }
+
+    payload = {
+        "model": "llama3-70b-8192",
+        "messages": [
+            {"role": "system", "content": f"You generate {project_type} app code."},
+            {"role": "user", "content": prompt}
+        ]
+    }
+
+    headers = {
+        "Authorization": f"Bearer {GROQ_API_KEY}",
+        "Content-Type": "application/json"
+    }
+
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(GROQ_API_URL, json=payload, headers=headers)
+        out = resp.json()
+
+    return {
+        "status": "ok",
+        "prompt": prompt,
+        "project_type": project_type,
+        "generated_code": out["choices"][0]["message"]["content"]
+    }
