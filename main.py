@@ -74,7 +74,7 @@ async def generate_code(data: dict):
         }
 
     payload = {
-        "model": "llama3-70b-8192",
+        "model": "llama3-8b-8192",
         "messages": [
             {"role": "system", "content": f"You generate {project_type} app code."},
             {"role": "user", "content": prompt}
