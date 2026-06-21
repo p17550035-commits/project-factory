@@ -74,7 +74,7 @@ async def generate_code(data: dict):
         }
 
     payload = {
-        "model": "llama3-8b-8192",
+        "model": "llama3-groq-70b-8192-tool-use-preview",
         "messages": [
             {"role": "system", "content": f"You generate {project_type} app code."},
             {"role": "user", "content": prompt}
@@ -90,14 +90,12 @@ async def generate_code(data: dict):
         resp = await client.post(GROQ_API_URL, json=payload, headers=headers)
         out = resp.json()
 
-    # Debug: If Groq returned an error, show it directly
     if "error" in out:
         return {
             "status": "groq_error",
             "details": out
         }
 
-    # Debug: If Groq didn't return choices, show the whole response
     if "choices" not in out:
         return {
             "status": "unexpected_groq_response",
