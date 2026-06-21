@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.responses import FileResponse
 import os
 import httpx
 
@@ -61,6 +62,11 @@ def delete_project(project_id: str):
         "project_id": project_id
     }
 
+# Chat UI page
+@app.get("/chat")
+def chat_page():
+    return FileResponse("chat.html")
+
 # REAL AI endpoint
 @app.post("/project/generate")
 async def generate_code(data: dict):
@@ -98,8 +104,8 @@ async def generate_code(data: dict):
 
     if "choices" not in out:
         return {
-            "status": "unexpected_groq_response",
-            "details": out
+        "status": "unexpected_groq_response",
+        "details": out
         }
 
     return {
