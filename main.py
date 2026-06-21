@@ -25,3 +25,6 @@ def build_project(req: BuildRequest):
 @app.get("/test")
 def test():
     return {"message": "Backend is alive!"}
+@app.post("/echo")
+def echo(data: dict):
+    return {"you_sent": data}
