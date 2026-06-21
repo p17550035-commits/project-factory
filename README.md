@@ -1,189 +1,84 @@
 <!-- 
   FILE: README.md
-  PURPOSE: Project overview, architecture documentation, standards, and contributor guide
+  PURPOSE: Main project overview, usage instructions, and documentation entry point
   AUTO-GENERATED: No
   PROTECTED: Yes
-  LAST UPDATED: 06/21/2026 01:15 PM EDT
-  VERSION: 1.0.0
+  LAST UPDATED: 06/21/2026 02:59 PM EDT
+  VERSION: 1.2.0
 -->
 
-Project Factory — AI App Builder
-A modular backend + automation system for generating code, scaffolding projects, and building app templates using Groq LLMs.
+# Project Factory
 
-This system is designed to scale from a single‑user local tool into a multi‑user, multi‑service automation platform.  
-It emphasizes clean structure, metadata integrity, file safety, and future‑proofing.
-
----
-
-📌 Overview
-
-Project Factory is an AI‑powered development engine that:
-
-- Generates code, scripts, and project templates  
-- Provides a command‑console style UI (chat.html)  
-- Communicates with Groq’s LLM API  
-- Enforces strict file metadata standards  
-- Supports protected files and safe‑overwrite rules  
-- Uses UTC internally with auto‑detected timezone conversion  
-- Is designed for future automation, multi‑user support, and modular expansion  
-
-This is not just a backend — it’s the foundation of a self‑building development ecosystem.
+Project Factory is a modular, metadata-driven system designed to generate, organize, and maintain project files with clean structure, automation support, and long-term stability.  
+This repository contains the core backend, UI components, documentation, and standards.
 
 ---
 
-🧱 Core Components
+# Features
 
-1. FastAPI Backend (main.py)
-Handles:
-
-- Groq API requests  
-- Code generation  
-- Project scaffolding  
-- File routing  
-- System commands (restart, test, etc.)  
-
-Protected file — cannot be overwritten without authorization.
-
-2. Frontend Command Console (chat.html)
-A lightweight UI that:
-
-- Sends prompts to the backend  
-- Displays AI responses  
-- Supports code blocks, copy buttons, timestamps  
-- Includes a dropdown command menu  
-- Uses metadata + footer integrity checks  
-
-3. Metadata System
-Every file in the project follows a strict metadata block:
-
-`
-FILE: <name>
-PURPOSE: <description>
-AUTO-GENERATED: Yes/No
-PROTECTED: Yes/No
-LAST UPDATED: MM/DD/YYYY HH:MM AM/PM <TZ>
-VERSION: X.Y.Z
-`
-
-And ends with:
-
-`
-END OF <filename> (<linecount> lines)
-`
-
-This ensures:
-
-- File identity  
-- Version tracking  
-- Timestamp clarity  
-- Safe overwrites  
-- Automation compatibility  
-- Human readability  
+- Metadata headers and footers for every file  
+- Protected file system  
+- FastAPI backend  
+- Chat-style UI  
+- Requirements documentation  
+- Roadmap and security policies  
+- Clean, consistent Markdown standards  
+- Automation-ready structure  
 
 ---
 
-🛡 Protected File Rules
+# Getting Started
 
-Some files are marked:
+To run the backend:
 
-`
-PROTECTED: Yes
-`
+1. Install dependencies  
+2. Run the FastAPI server  
+3. Open the chat UI in your browser  
 
-These files:
+Requirements are listed in:
 
-- Cannot be overwritten by automation  
-- Cannot be regenerated without credentials  
-- Must be manually approved for modification  
-- Are critical to system stability  
-
-Examples:
-
-- main.py  
-- README.md  
-- Deployment configs  
-- Security‑sensitive modules  
+- requirements.txt  
+- requirements-explained.md  
 
 ---
 
-⏱ Timestamp Strategy
+# File Standards
 
-The system uses:
+Every file must include:
 
-- UTC internally (industry standard)  
-- Auto‑detected user timezone for display  
-- Fallback: America/New_York  
-- MM/DD/YYYY HH:MM AM/PM formatting  
+- A metadata header at the top  
+- A footer with line count at the bottom  
 
-This ensures:
-
-- Accurate logs  
-- Consistent metadata  
-- Multi‑user compatibility  
-- Zero daylight‑savings issues  
+See CONTRIBUTING.md for full rules and templates.
 
 ---
 
-🔧 Automation Roadmap
+# Documentation
 
-Automation will eventually handle:
+The following documents define project rules and structure:
 
-- Metadata injection  
-- Timestamp updates  
-- Version bumping  
-- File generation  
-- Protected file enforcement  
-- Project scaffolding  
-- Multi‑file builds  
-- Deployment scripts  
-- Background services  
+- CONTRIBUTING.md  
+- SECURITY.md  
+- ROADMAP.md  
+- requirements-explained.md  
 
-The system is designed so these features can be added without rewriting existing code.
+These files describe how to contribute, how security is handled, and what features are planned.
 
 ---
 
-📂 File Structure (Current)
+# Project Goals
 
-`
-project-factory/
-│
-├── main.py          # FastAPI backend (PROTECTED)
-├── chat.html        # Frontend command console
-├── README.md        # Project documentation (PROTECTED)
-└── requirements.txt # Dependencies (future)
-`
-
-This will expand as automation grows.
+- Clean, organized file structure  
+- Automated metadata management  
+- Scalable architecture  
+- Multi-user support  
+- Deployment-ready tooling  
 
 ---
 
-🧭 Contribution Rules (Future‑Proofed)
+# Notes
 
-Even if you're the only contributor now, the project is structured for multi‑user collaboration.
+This project is actively evolving.  
+Documentation and structure will expand as new features are added.
 
-Rules:
-
-- All files must include metadata headers  
-- All files must include footer line counts  
-- Protected files require authorization  
-- Version numbers must increment on change  
-- Timestamps must reflect local time (auto‑detected)  
-- Code must follow clean, senior‑engineer formatting  
-
----
-
-🚀 Vision
-
-Project Factory is designed to evolve into:
-
-- A full AI‑powered development environment  
-- A modular automation engine  
-- A multi‑user code generation platform  
-- A self‑maintaining system with metadata‑aware rebuilds  
-- A tool that can generate apps, APIs, scripts, and UIs on demand  
-
-This README will expand as the system grows.
-
----
-
-<!-- END OF README.md (142 lines) -->
+<!-- END OF README.md (84 lines) -->
