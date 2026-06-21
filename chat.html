@@ -205,4 +205,151 @@
       max-height:35vh;
     }
 
-    body
+    body.compact code {
+      font-size:11px;
+    }
+
+    body.compact #header {
+      padding:4px 8px;
+      font-size:13px;
+    }
+
+    body.compact #inputBox {
+      padding:4px;
+    }
+
+    body.compact #text {
+      padding:6px;
+      font-size:13px;
+    }
+
+    body.compact #send {
+      padding:6px 12px;
+      font-size:13px;
+    }
+  </style>
+</head>
+
+<body>
+
+<div id="app">
+  <div id="header">
+    <span>Groq App Builder Chat</span>
+    <button id="modeToggle">Compact</button>
+  </div>
+
+  <div id="chat"></div>
+
+  <div id="inputBox">
+    <input id="text" placeholder="Type here...">
+    <button id="send">Send</button>
+  </div>
+</div>
+
+<script>
+  const chat = document.getElementById("chat");
+  const text = document.getElementById("text");
+  const send = document.getElementById("send");
+  const modeToggle = document.getElementById("modeToggle");
+
+  function convertMarkdown(md) {
+    return md.replace(/```([\s\S]*?)```/g, (match, code) => {
+      return `<pre><code>${code.replace(/</g, "&lt;")}</code></pre>`;
+    });
+  }
+
+  function addMessage(content, isUser) {
+    const row = document.createElement("div");
+    row.className = "msg-row " + (isUser ? "you" : "ai");
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.innerHTML = convertMarkdown(content);
+
+    if (!isUser) {
+      const actions = document.createElement("div");
+      actions.className = "msg-actions";
+
+      const copyMsgBtn = document.createElement("button");
+      copyMsgBtn.className = "msg-btn";
+      copyMsgBtn.textContent = "Copy msg";
+      copyMsgBtn.onclick = () => {
+        navigator.clipboard.writeText(bubble.innerText);
+        copyMsgBtn.textContent = "Copied!";
+        setTimeout(() => copyMsgBtn.textContent = "Copy msg", 1500);
+      };
+
+      actions.appendChild(copyMsgBtn);
+      bubble.appendChild(actions);
+    }
+
+    row.appendChild(bubble);
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+
+    addCodeEnhancements();
+  }
+
+  function addCodeEnhancements() {
+    document.querySelectorAll(".bubble pre").forEach(block => {
+      if (!block.dataset.init) {
+        block.dataset.init = "true";
+
+        const btn = document.createElement("button");
+        btn.textContent = "Copy";
+        btn.className = "copy-btn";
+        btn.onclick = () => {
+          navigator.clipboard.writeText(block.innerText);
+          btn.textContent = "Copied!";
+          setTimeout(() => btn.textContent = "Copy", 1500);
+        };
+        block.appendChild(btn);
+
+        const hint = document.createElement("div");
+        hint.className = "expand-hint";
+        hint.textContent = "Tap to expand";
+        block.appendChild(hint);
+
+        block.onclick = (e) => {
+          if (e.target === btn) return;
+          block.classList.toggle("expanded");
+          hint.textContent = block.classList.contains("expanded")
+            ? "Tap to collapse"
+            : "Tap to expand";
+        };
+      }
+    });
+  }
+
+  async function sendMessage() {
+    const msg = text.value.trim();
+    if (!msg) return;
+    text.value = "";
+
+    addMessage(msg, true);
+
+    const res = await fetch("/project/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: msg, project_type: "chat" })
+    });
+
+    const data = await res.json();
+    const reply = data.generated_code || JSON.stringify(data);
+
+    addMessage(reply, false);
+  }
+
+  send.onclick = sendMessage;
+  text.onkeydown = (e) => { if (e.key === "Enter") sendMessage(); };
+
+  modeToggle.onclick = () => {
+    document.body.classList.toggle("compact");
+    modeToggle.textContent = document.body.classList.contains("compact")
+      ? "Comfort"
+      : "Compact";
+  };
+</script>
+
+</body>
+</html>
