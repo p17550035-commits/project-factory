@@ -41,12 +41,13 @@
       flex-shrink:0;
       display:flex;
       align-items:center;
-      justify-content:flex-start; /* shifted left */
+      justify-content:flex-start; /* left aligned */
       position:relative;
     }
 
     .header-center {
-      flex:0; /* no longer stretching to center */
+      flex:0;
+      white-space:nowrap; /* prevents wrapping */
       text-align:left;
     }
 
@@ -266,3 +267,133 @@
       <button id="modeToggle">Compact</button>
     </div>
   </div>
+
+  <!-- CHAT -->
+  <div id="chat"></div>
+
+  <!-- INPUT -->
+  <div id="inputBox">
+    <input id="text" placeholder="Type here...">
+    <button id="send">Send</button>
+  </div>
+
+</div>
+
+<script>
+  const chat = document.getElementById("chat");
+  const text = document.getElementById("text");
+  const send = document.getElementById("send");
+  const modeToggle = document.getElementById("modeToggle");
+  const copyConversation = document.getElementById("copyConversation");
+
+  function convertMarkdown(md) {
+    return md.replace(/```([\s\S]*?)```/g, (match, code) => {
+      return `<pre><code>${code.replace(/</g, "&lt;")}</code></pre>`;
+    });
+  }
+
+  function addMessage(content, isUser) {
+    const row = document.createElement("div");
+    row.className = "msg-row " + (isUser ? "you" : "ai");
+
+    const bubble = document.createElement("div");
+    bubble.className = "bubble";
+    bubble.innerHTML = convertMarkdown(content);
+
+    if (!isUser) {
+      const actions = document.createElement("div");
+      actions.className = "msg-actions";
+
+      const copyMsgBtn = document.createElement("button");
+      copyMsgBtn.className = "msg-btn";
+      copyMsgBtn.textContent = "Copy msg";
+      copyMsgBtn.onclick = () => {
+        navigator.clipboard.writeText(bubble.innerText);
+        copyMsgBtn.textContent = "Copied!";
+        setTimeout(() => copyMsgBtn.textContent = "Copy msg", 1500);
+      };
+
+      actions.appendChild(copyMsgBtn);
+      bubble.appendChild(actions);
+    }
+
+    row.appendChild(bubble);
+    chat.appendChild(row);
+    chat.scrollTop = chat.scrollHeight;
+
+    addCodeEnhancements();
+  }
+
+  function addCodeEnhancements() {
+    document.querySelectorAll(".bubble pre").forEach(block => {
+      if (!block.dataset.init) {
+        block.dataset.init = "true";
+
+        const btn = document.createElement("button");
+        btn.textContent = "Copy";
+        btn.className = "copy-btn";
+        btn.onclick = () => {
+          navigator.clipboard.writeText(block.innerText);
+          btn.textContent = "Copied!";
+          setTimeout(() => btn.textContent = "Copy", 1500);
+        };
+        block.appendChild(btn);
+
+        const hint = document.createElement("div");
+        hint.className = "expand-hint";
+        hint.textContent = "Tap to expand";
+        block.appendChild(hint);
+
+        block.onclick = (e) => {
+          if (e.target === btn) return;
+          block.classList.toggle("expanded");
+          hint.textContent = block.classList.contains("expanded")
+            ? "Tap to collapse"
+            : "Tap to expand";
+        };
+      }
+    });
+  }
+
+  async function sendMessage() {
+    const msg = text.value.trim();
+    if (!msg) return;
+    text.value = "";
+
+    addMessage(msg, true);
+
+    const res = await fetch("/project/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: msg, project_type: "chat" })
+    });
+
+    const data = await res.json();
+    const reply = data.generated_code || JSON.stringify(data);
+
+    addMessage(reply, false);
+  }
+
+  send.onclick = sendMessage;
+  text.onkeydown = (e) => { if (e.key === "Enter") sendMessage(); };
+
+  modeToggle.onclick = () => {
+    document.body.classList.toggle("compact");
+    modeToggle.textContent = document.body.classList.contains("compact")
+      ? "Comfort"
+      : "Compact";
+  };
+
+  copyConversation.onclick = () => {
+    const allText = [...document.querySelectorAll(".bubble")]
+      .map(b => b.innerText)
+      .join("\n\n");
+
+    navigator.clipboard.writeText(allText);
+    copyConversation.textContent = "Copied!";
+    setTimeout(() => copyConversation.textContent = "Copy", 1500);
+  };
+</script>
+
+</body>
+</html>
