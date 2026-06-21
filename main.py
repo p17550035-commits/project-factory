@@ -10,6 +10,40 @@ app = FastAPI()
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 GROQ_API_URL = os.getenv("GROQ_API_URL")
 
+SYSTEM_PROMPT = """
+You are a highly accurate, code‑oriented AI assistant. 
+Your priorities are correctness, clarity, and clean structure.
+
+Rules:
+1. Always respond with clean, well‑formatted code when the user asks for anything technical.
+2. Keep explanations short, structured, and never ramble.
+3. Never produce run‑on sentences.
+4. Never invent APIs or functions. If unsure, ask.
+5. Prefer step‑by‑step logic.
+6. Use headings, bullet points, and code blocks.
+7. When generating code, include only what is necessary.
+8. Never output broken or partial code.
+9. If the user asks for something unclear, request clarification.
+10. Always behave like a senior software engineer.
+
+Always format your responses using this structure:
+
+## Summary
+A 1–2 sentence explanation of what you are doing.
+
+## Code
+The complete code solution in a single code block.
+
+## Notes
+Any important details or limitations.
+
+Default to code‑first responses.
+Use a confident, direct, helpful tone.
+Avoid filler language.
+Avoid generic phrases.
+Be concise and practical.
+"""
+
 class BuildRequest(BaseModel):
     prompt: str
     project_type: str = "python-script"
@@ -21,53 +55,10 @@ def root():
         "message": "AI App Builder backend is running."
     }
 
-@app.get("/test")
-def test():
-    return {"message": "Backend is alive!"}
-
-@app.post("/echo")
-def echo(data: dict):
-    return {"you_sent": data}
-
-@app.post("/project/create")
-def create_project(data: dict):
-    return {
-        "status": "created",
-        "project_id": "proj_12345",
-        "name": data.get("name", "Untitled Project"),
-        "project_type": data.get("project_type", "unknown")
-    }
-
-@app.get("/project/status/{project_id}")
-def project_status(project_id: str):
-    return {
-        "project_id": project_id,
-        "status": "ready",
-        "message": "Project is initialized and ready."
-    }
-
-@app.get("/projects")
-def list_projects():
-    return {
-        "projects": [
-            {"id": "proj_12345", "name": "My First App"},
-            {"id": "proj_67890", "name": "Weather App"},
-        ]
-    }
-
-@app.delete("/project/{project_id}")
-def delete_project(project_id: str):
-    return {
-        "status": "deleted",
-        "project_id": project_id
-    }
-
-# Chat UI page
 @app.get("/chat")
 def chat_page():
     return FileResponse("chat.html")
 
-# REAL AI endpoint
 @app.post("/project/generate")
 async def generate_code(data: dict):
     prompt = data.get("prompt", "")
@@ -82,7 +73,7 @@ async def generate_code(data: dict):
     payload = {
         "model": "llama-3.1-8b-instant",
         "messages": [
-            {"role": "system", "content": f"You generate {project_type} app code."},
+            {"role": "system", "content": SYSTEM_PROMPT},
             {"role": "user", "content": prompt}
         ]
     }
@@ -97,16 +88,10 @@ async def generate_code(data: dict):
         out = resp.json()
 
     if "error" in out:
-        return {
-            "status": "groq_error",
-            "details": out
-        }
+        return {"status": "groq_error", "details": out}
 
     if "choices" not in out:
-        return {
-        "status": "unexpected_groq_response",
-        "details": out
-        }
+        return {"status": "unexpected_groq_response", "details": out}
 
     return {
         "status": "ok",
