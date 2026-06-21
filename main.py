@@ -1,4 +1,5 @@
-from fastapi import FastAPI
+
+    from fastapi import FastAPI
 from pydantic import BaseModel
 import os
 import httpx
@@ -90,24 +91,23 @@ async def generate_code(data: dict):
         resp = await client.post(GROQ_API_URL, json=payload, headers=headers)
         out = resp.json()
 
-# If Groq returned an error, show it directly
-if "error" in out:
-    return {
-        "status": "groq_error",
-        "details": out
-    }
+    # Debug: If Groq returned an error, show it directly
+    if "error" in out:
+        return {
+            "status": "groq_error",
+            "details": out
+        }
 
-# If Groq didn't return choices, show the whole response
-if "choices" not in out:
-    return {
-        "status": "unexpected_groq_response",
-        "details": out
-    }
+    # Debug: If Groq didn't return choices, show the whole response
+    if "choices" not in out:
+        return {
+            "status": "unexpected_groq_response",
+            "details": out
+        }
 
-return {
-    "status": "ok",
-    "prompt": prompt,
-    "project_type": project_type,
-    "generated_code": out["choices"][0]["message"]["content"]
-}
-    
+    return {
+        "status": "ok",
+        "prompt": prompt,
+        "project_type": project_type,
+        "generated_code": out["choices"][0]["message"]["content"]
+    }
