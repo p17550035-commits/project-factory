@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Groq Chat</title>
+  <title>Groq Command Console</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
@@ -41,13 +41,13 @@
       flex-shrink:0;
       display:flex;
       align-items:center;
-      justify-content:flex-start; /* left aligned */
+      justify-content:flex-start;
       position:relative;
     }
 
     .header-center {
       flex:0;
-      white-space:nowrap; /* prevents wrapping */
+      white-space:nowrap;
       text-align:left;
     }
 
@@ -56,16 +56,42 @@
       right:10px;
       display:flex;
       gap:6px;
+      align-items:center;
     }
 
-    #modeToggle, #copyConversation {
-      font-size:11px;
-      padding:4px 8px;
-      border-radius:999px;
-      border:none;
+    #dropdownToggle {
       background:#111827;
       color:#e5e7eb;
+      border:none;
+      padding:4px 8px;
+      border-radius:999px;
       cursor:pointer;
+      font-size:11px;
+    }
+
+    #dropdownMenu {
+      position:absolute;
+      top:32px;
+      right:10px;
+      background:#0f172a;
+      border:1px solid #222;
+      border-radius:8px;
+      padding:6px 0;
+      display:none;
+      flex-direction:column;
+      width:150px;
+      z-index:20;
+    }
+
+    .dropdown-item {
+      padding:6px 12px;
+      font-size:12px;
+      color:#e5e7eb;
+      cursor:pointer;
+    }
+
+    .dropdown-item:hover {
+      background:#1e293b;
     }
 
     /* ---------------- CHAT AREA ---------------- */
@@ -109,6 +135,13 @@
       background:#1f2937;
       color:#e5e7eb;
       border-bottom-left-radius:4px;
+    }
+
+    .timestamp {
+      font-size:10px;
+      color:#9ca3af;
+      margin-top:2px;
+      text-align:right;
     }
 
     .ai .bubble .msg-actions {
@@ -216,41 +249,6 @@
       color:#9ca3af;
     }
 
-    /* ---------------- COMPACT MODE ---------------- */
-
-    body.compact .bubble {
-      padding:4px 6px;
-      font-size:12px;
-    }
-
-    body.compact pre {
-      padding:4px;
-      font-size:11px;
-      max-height:35vh;
-    }
-
-    body.compact code {
-      font-size:11px;
-    }
-
-    body.compact #header {
-      padding:4px 8px;
-      font-size:13px;
-    }
-
-    body.compact #inputBox {
-      padding:4px;
-    }
-
-    body.compact #text {
-      padding:6px;
-      font-size:13px;
-    }
-
-    body.compact #send {
-      padding:6px 12px;
-      font-size:13px;
-    }
   </style>
 </head>
 
@@ -260,11 +258,16 @@
 
   <!-- HEADER -->
   <div id="header">
-    <div class="header-center">Groq App Builder Chat</div>
+    <div class="header-center">Groq Command Console</div>
 
     <div class="header-right">
-      <button id="copyConversation">Copy</button>
-      <button id="modeToggle">Compact</button>
+      <button id="dropdownToggle">Menu</button>
+
+      <div id="dropdownMenu">
+        <div class="dropdown-item" id="clearChat">Clear Chat</div>
+        <div class="dropdown-item" id="testSystem">Test System</div>
+        <div class="dropdown-item" id="restartSystem">Restart System</div>
+      </div>
     </div>
   </div>
 
@@ -273,7 +276,7 @@
 
   <!-- INPUT -->
   <div id="inputBox">
-    <input id="text" placeholder="Type here...">
+    <input id="text" placeholder="Type command or request...">
     <button id="send">Send</button>
   </div>
 
@@ -283,8 +286,26 @@
   const chat = document.getElementById("chat");
   const text = document.getElementById("text");
   const send = document.getElementById("send");
-  const modeToggle = document.getElementById("modeToggle");
-  const copyConversation = document.getElementById("copyConversation");
+
+  const dropdownToggle = document.getElementById("dropdownToggle");
+  const dropdownMenu = document.getElementById("dropdownMenu");
+
+  const clearChatBtn = document.getElementById("clearChat");
+  const testSystemBtn = document.getElementById("testSystem");
+  const restartSystemBtn = document.getElementById("restartSystem");
+
+  /* ---------------- TIMESTAMP ---------------- */
+
+  function getTimestamp() {
+    const d = new Date();
+    let h = d.getHours();
+    const m = d.getMinutes().toString().padStart(2, "0");
+    const ampm = h >= 12 ? "PM" : "AM";
+    h = h % 12 || 12;
+    return `${h}:${m} ${ampm}`;
+  }
+
+  /* ---------------- MESSAGE HANDLING ---------------- */
 
   function convertMarkdown(md) {
     return md.replace(/```([\s\S]*?)```/g, (match, code) => {
@@ -299,6 +320,12 @@
     const bubble = document.createElement("div");
     bubble.className = "bubble";
     bubble.innerHTML = convertMarkdown(content);
+
+    const time = document.createElement("div");
+    time.className = "timestamp";
+    time.textContent = getTimestamp();
+
+    bubble.appendChild(time);
 
     if (!isUser) {
       const actions = document.createElement("div");
@@ -321,10 +348,10 @@
     chat.appendChild(row);
     chat.scrollTop = chat.scrollHeight;
 
-    addCodeEnhancements();
+    enhanceCodeBlocks();
   }
 
-  function addCodeEnhancements() {
+  function enhanceCodeBlocks() {
     document.querySelectorAll(".bubble pre").forEach(block => {
       if (!block.dataset.init) {
         block.dataset.init = "true";
@@ -335,65 +362,3 @@
         btn.onclick = () => {
           navigator.clipboard.writeText(block.innerText);
           btn.textContent = "Copied!";
-          setTimeout(() => btn.textContent = "Copy", 1500);
-        };
-        block.appendChild(btn);
-
-        const hint = document.createElement("div");
-        hint.className = "expand-hint";
-        hint.textContent = "Tap to expand";
-        block.appendChild(hint);
-
-        block.onclick = (e) => {
-          if (e.target === btn) return;
-          block.classList.toggle("expanded");
-          hint.textContent = block.classList.contains("expanded")
-            ? "Tap to collapse"
-            : "Tap to expand";
-        };
-      }
-    });
-  }
-
-  async function sendMessage() {
-    const msg = text.value.trim();
-    if (!msg) return;
-    text.value = "";
-
-    addMessage(msg, true);
-
-    const res = await fetch("/project/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ prompt: msg, project_type: "chat" })
-    });
-
-    const data = await res.json();
-    const reply = data.generated_code || JSON.stringify(data);
-
-    addMessage(reply, false);
-  }
-
-  send.onclick = sendMessage;
-  text.onkeydown = (e) => { if (e.key === "Enter") sendMessage(); };
-
-  modeToggle.onclick = () => {
-    document.body.classList.toggle("compact");
-    modeToggle.textContent = document.body.classList.contains("compact")
-      ? "Comfort"
-      : "Compact";
-  };
-
-  copyConversation.onclick = () => {
-    const allText = [...document.querySelectorAll(".bubble")]
-      .map(b => b.innerText)
-      .join("\n\n");
-
-    navigator.clipboard.writeText(allText);
-    copyConversation.textContent = "Copied!";
-    setTimeout(() => copyConversation.textContent = "Copy", 1500);
-  };
-</script>
-
-</body>
-</html>
