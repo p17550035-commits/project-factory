@@ -1,3 +1,12 @@
+<!-- 
+  FILE: chat.html
+  PURPOSE: Frontend command console UI for Groq automation system
+  AUTO-GENERATED: No
+  PROTECTED: No
+  LAST UPDATED: 06/21/2026 12:43 PM EDT
+  VERSION: 1.0.0
+-->
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -362,3 +371,94 @@
         btn.onclick = () => {
           navigator.clipboard.writeText(block.innerText);
           btn.textContent = "Copied!";
+          setTimeout(() => btn.textContent = "Copy", 1500);
+        };
+        block.appendChild(btn);
+
+        const hint = document.createElement("div");
+        hint.className = "expand-hint";
+        hint.textContent = "Tap to expand";
+        block.appendChild(hint);
+
+        block.onclick = (e) => {
+          if (e.target === btn) return;
+          block.classList.toggle("expanded");
+          hint.textContent = block.classList.contains("expanded")
+            ? "Tap to collapse"
+            : "Tap to expand";
+        };
+      }
+    });
+  }
+
+  /* ---------------- SEND MESSAGE ---------------- */
+
+  async function sendMessage() {
+    const msg = text.value.trim();
+    if (!msg) return;
+    text.value = "";
+
+    addMessage(msg, true);
+
+    const res = await fetch("/project/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt: msg, project_type: "chat" })
+    });
+
+    const data = await res.json();
+    const reply = data.generated_code || JSON.stringify(data);
+
+    addMessage(reply, false);
+  }
+
+  send.onclick = sendMessage;
+  text.onkeydown = (e) => { if (e.key === "Enter") sendMessage(); };
+
+  /* ---------------- DROPDOWN MENU ---------------- */
+
+  dropdownToggle.onclick = () => {
+    dropdownMenu.style.display =
+      dropdownMenu.style.display === "flex" ? "none" : "flex";
+  };
+
+  document.body.onclick = (e) => {
+    if (!dropdownToggle.contains(e.target) &&
+        !dropdownMenu.contains(e.target)) {
+      dropdownMenu.style.display = "none";
+    }
+  };
+
+  /* ---------------- COMMAND CENTER BUTTONS ---------------- */
+
+  clearChatBtn.onclick = () => {
+    chat.innerHTML = "";
+    dropdownMenu.style.display = "none";
+  };
+
+  testSystemBtn.onclick = async () => {
+    dropdownMenu.style.display = "none";
+    addMessage("Running system diagnostics...", false);
+
+    const res = await fetch("/system/test");
+    const data = await res.json();
+
+    addMessage(data.status || JSON.stringify(data), false);
+  };
+
+  restartSystemBtn.onclick = async () => {
+    dropdownMenu.style.display = "none";
+    addMessage("Restarting all services...", false);
+
+    const res = await fetch("/system/restart");
+    const data = await res.json();
+
+    addMessage(data.status || JSON.stringify(data), false);
+  };
+
+</script>
+
+</body>
+</html>
+
+<!-- END OF chat.html (364 lines) -->
