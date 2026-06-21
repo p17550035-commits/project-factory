@@ -1,3 +1,12 @@
+# 
+#  FILE: main.py
+#  PURPOSE: FastAPI backend for Groq-powered AI App Builder and command console
+#  AUTO-GENERATED: No
+#  PROTECTED: Yes
+#  LAST UPDATED: 06/21/2026 12:55 PM EDT
+#  VERSION: 1.0.0
+#
+
 from fastapi import FastAPI
 from pydantic import BaseModel
 from fastapi.responses import FileResponse
@@ -99,3 +108,5 @@ async def generate_code(data: dict):
         "project_type": project_type,
         "generated_code": out["choices"][0]["message"]["content"]
     }
+
+# END OF main.py (147 lines)
