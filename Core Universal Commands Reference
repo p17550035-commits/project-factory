@@ -1,0 +1,148 @@
+# Commands Reference (v1.0)
+Master list of essential commands across major environments.
+Each entry includes: command, description, and OS/environment.
+
+---
+
+# 1. Shell Environments
+
+## Bash / Linux / Termux
+- ls — list files (Linux/Unix/Termux)
+- cd <dir> — change directory (Linux/Unix/Termux)
+- pwd — print working directory (Linux/Unix/Termux)
+- cp <src> <dst> — copy files (Linux/Unix/Termux)
+- mv <src> <dst> — move/rename files (Linux/Unix/Termux)
+- rm <file> — delete file (Linux/Unix/Termux)
+- rm -r <dir> — delete directory recursively (Linux/Unix/Termux)
+- mkdir <dir> — create directory (Linux/Unix/Termux)
+- touch <file> — create empty file (Linux/Unix/Termux)
+- cat <file> — print file contents (Linux/Unix/Termux)
+- nano <file> — edit file (Linux/Unix/Termux)
+- chmod +x <file> — make file executable (Linux/Unix/Termux)
+- ps aux — list running processes (Linux/Unix/Termux)
+- kill <pid> — terminate process (Linux/Unix/Termux)
+- top / htop — system monitor (Linux/Unix/Termux)
+- curl <url> — HTTP request (Linux/Unix/Termux)
+- wget <url> — download file (Linux/Unix/Termux)
+- ssh user@host — connect to remote machine (Linux/Unix/Termux)
+
+---
+
+# 2. Windows CMD
+- dir — list files (Windows)
+- cd <dir> — change directory (Windows)
+- copy <src> <dst> — copy files (Windows)
+- move <src> <dst> — move files (Windows)
+- del <file> — delete file (Windows)
+- rmdir /s <dir> — delete directory (Windows)
+- tasklist — list processes (Windows)
+- taskkill /PID <id> /F — kill process (Windows)
+- ipconfig — network info (Windows)
+- ping <host> — test connectivity (Windows)
+
+---
+
+# 3. PowerShell
+- Get-ChildItem — list files (Windows/PowerShell)
+- Set-Location — change directory (Windows/PowerShell)
+- Copy-Item — copy files (Windows/PowerShell)
+- Move-Item — move files (Windows/PowerShell)
+- Remove-Item — delete files (Windows/PowerShell)
+- Get-Process — list processes (Windows/PowerShell)
+- Stop-Process -Id <id> — kill process (Windows/PowerShell)
+- Invoke-WebRequest <url> — download file (Windows/PowerShell)
+
+---
+
+# 4. Git
+- git init — create repo (All OS)
+- git clone <url> — clone repo (All OS)
+- git add . — stage changes (All OS)
+- git commit -m "msg" — commit changes (All OS)
+- git push — upload changes (All OS)
+- git pull — download changes (All OS)
+- git status — show repo state (All OS)
+- git branch — list branches (All OS)
+- git checkout <branch> — switch branch (All OS)
+
+---
+
+# 5. Python
+- python file.py — run script (All OS)
+- pip install <pkg> — install package (All OS)
+- pip freeze — list installed packages (All OS)
+- python -m venv venv — create virtual env (All OS)
+- source venv/bin/activate — activate venv (Linux/Mac/Termux)
+- venv\Scripts\activate — activate venv (Windows)
+
+---
+
+# 6. Node / npm
+- node file.js — run script (All OS)
+- npm init -y — create project (All OS)
+- npm install <pkg> — install package (All OS)
+- npm run <script> — run script (All OS)
+
+---
+
+# 7. Docker
+- docker ps — list containers (All OS)
+- docker images — list images (All OS)
+- docker run <img> — run container (All OS)
+- docker stop <id> — stop container (All OS)
+- docker rm <id> — remove container (All OS)
+- docker build -t name . — build image (All OS)
+
+---
+
+# 8. Systemctl (Linux servers)
+- systemctl start <svc> — start service (Linux)
+- systemctl stop <svc> — stop service (Linux)
+- systemctl restart <svc> — restart service (Linux)
+- systemctl status <svc> — service status (Linux)
+- systemctl enable <svc> — auto-start on boot (Linux)
+
+---
+
+# 9. Networking Tools
+- ping <host> — test connectivity (All OS)
+- traceroute <host> — trace route (Linux/Mac)
+- tracert <host> — trace route (Windows)
+- ifconfig — network info (Linux/Mac)
+- ip addr — network info (Linux)
+- netstat -tulpn — open ports (Linux)
+- nslookup <domain> — DNS lookup (All OS)
+- dig <domain> — DNS lookup (Linux/Mac)
+
+---
+
+# 10. Termux-Specific
+- pkg update — update packages
+- pkg install <pkg> — install package
+- termux-setup-storage — enable storage access
+- termux-open <file> — open file with Android app
+- termux-wake-lock — prevent sleep
+- termux-wake-unlock — allow sleep
+
+---
+
+# 11. SQL (Generic)
+- SELECT * FROM table; — read data
+- INSERT INTO table (...) VALUES (...); — add data
+- UPDATE table SET ... WHERE ...; — modify data
+- DELETE FROM table WHERE ...; — remove data
+- CREATE TABLE name (...); — create table
+
+---
+
+# 12. Redis
+- redis-cli — open shell
+- SET key value — set key
+- GET key — get key
+- DEL key — delete key
+- KEYS * — list keys
+- FLUSHALL — delete everything (danger)
+
+---
+
+# End of Commands Reference v1.0
