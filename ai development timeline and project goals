@@ -1,0 +1,99 @@
+AI DEVELOPMENT ROADMAP
+Project: 30‑Layer Cognitive Architecture
+Status: Active
+Maintainer: Peter
+
+This roadmap outlines realistic development timelines for each layer of the 30‑page architecture, based on current AI research, open‑source capabilities, and free‑tier compute limits. It also tracks which layers can be built today and which require future breakthroughs.
+
+------------------------------------------------------------
+SECTION 1 — TIMELINE BY LAYER GROUP
+------------------------------------------------------------
+
+PAGES 1–10 — CURRENT TECH (0–3 years)
+These layers are fully achievable using free tools, open‑source models, and local compute.
+Includes:
+- Tool‑using agents
+- Memory graphs
+- Multi‑step planners
+- Multi‑agent basics
+- Self‑debugging loops
+- Workflow automation
+
+PAGES 11–15 — ADVANCED AUTONOMY (3–7 years)
+Partially achievable today. Full versions require better free models and more stable long‑term memory systems.
+Includes:
+- Persistent memory
+- Autonomous task loops
+- Self‑evaluation
+- Multi‑agent collaboration
+- Local world‑models
+
+PAGES 16–20 — COLLECTIVE INTELLIGENCE (5–12 years)
+Prototype versions possible on free tiers. Full versions require stable agent coordination and shared memory worlds.
+Includes:
+- Swarm cognition
+- Shared memory spaces
+- Agent negotiation
+- Emergent problem‑solving
+
+PAGES 21–24 — SELF‑MODELING SYSTEMS (10–20 years)
+Mostly research‑level. Small‑scale simulations possible.
+Includes:
+- Internal state awareness
+- Self‑reflection loops
+- Predictive self‑simulation
+- Identity persistence
+
+PAGES 25–30 — EMERGENT SUPER‑SYSTEMS (20–40 years)
+Conceptual design possible today. Full realization requires new compute, new math, and safe recursive self‑improvement.
+Includes:
+- Recursive self‑improvement
+- Hive‑mind architectures
+- Distributed cognition
+- Self‑rewriting systems
+
+------------------------------------------------------------
+SECTION 2 — WHAT WE CAN BUILD TODAY
+------------------------------------------------------------
+
+FULLY DOABLE NOW:
+- Pages 1–10
+
+PARTIALLY DOABLE:
+- Pages 11–13
+
+EXPERIMENTAL BUT POSSIBLE:
+- Pages 14–15
+
+RESEARCH‑ONLY (FOR NOW):
+- Pages 16–30
+
+------------------------------------------------------------
+SECTION 3 — REQUIRED BREAKTHROUGHS
+------------------------------------------------------------
+
+To reach the upper layers, the following breakthroughs are needed:
+
+- Long‑term memory systems
+- Stable multi‑agent coordination
+- World‑model compression
+- Self‑evaluation loops
+- Distributed cognition frameworks
+- Safe recursive self‑improvement
+- New compute architectures
+
+------------------------------------------------------------
+SECTION 4 — CONTRIBUTOR NOTES
+------------------------------------------------------------
+
+This project is designed to evolve over time. Contributors are welcome to:
+- Build prototypes of lower‑layer systems
+- Experiment with multi‑agent coordination
+- Improve memory and planning modules
+- Propose new architectures
+- Document experiments and results
+
+As AI advances, this roadmap will be updated to reflect new capabilities. If future contributors discover that certain layers have been reached earlier than predicted, they are encouraged to submit updates.
+
+------------------------------------------------------------
+END OF ROADMAP
